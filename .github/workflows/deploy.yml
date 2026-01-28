@@ -29,11 +29,11 @@ jobs:
           aws-region: ap-south-1
 
       - name: Upload to S3
-        run: aws s3 cp test-lambda-1.zip s3://test-lambda/test-lambda-1.zip
+        run: aws s3 cp test-lambda-1.zip s3://test-lambda-praveen-123/test-lambda-1.zip
 
       - name: Update Lambda
         run: |
           aws lambda update-function-code \
             --function-name test-lambda-1 \
-            --s3-bucket test-lambda \
+            --s3-bucket test-lambda-praveen-123 \
             --s3-key test-lambda-1.zip
