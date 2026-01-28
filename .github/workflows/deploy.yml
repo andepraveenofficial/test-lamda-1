@@ -19,7 +19,8 @@ jobs:
       - run: npm install
 
       - name: Zip files
-        run: zip -r test-lambda-1.zip node_modules package.json
+        # run: zip -r test-lambda-1.zip node_modules package.json
+        run: zip -r test-lambda-1.zip . -x ".git/*" -x ".github/*"  # Exclude .git and .github directories
 
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
