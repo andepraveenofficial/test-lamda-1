@@ -1,0 +1,39 @@
+name: Deploy Test Lambda 1
+
+on:
+  push:
+    branches:
+      - master # run workflow when code is pushed to master branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - run: npm install
+
+      - name: Zip files
+        run: zip -r test-lambda-1.zip node_modules package.json
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Upload to S3
+        run: aws s3 cp test-lambda-1.zip s3://test-lambda/test-lambda-1.zip
+
+      - name: Update Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name test-lambda-1 \
+            --s3-bucket test-lambda \
+            --s3-key test-lambda-1.zip
